@@ -63,9 +63,9 @@ int PositionMatrix::GetBitCount(void)
 }
 
 
-unsigned long long PositionMatrix::GetID(void)
+unsigned long long PositionMatrix::GetID(void) const
 {
-	return PositionMatrix::id;
+	return this->id;
 }
 
 
@@ -132,7 +132,6 @@ void PositionMatrix::RotateLeft(void)
 	
 	}
 	PositionMatrix::GenerateID();
-	PositionMatrix::UpdateBitCount();
 }
 
 
@@ -159,7 +158,6 @@ void PositionMatrix::RotateRight(void)
 	}
 
 	PositionMatrix::GenerateID();
-	PositionMatrix::UpdateBitCount();
 }
 
 
@@ -188,7 +186,6 @@ void PositionMatrix::RotateUp(void)
 	}
 
 	PositionMatrix::GenerateID();
-	PositionMatrix::UpdateBitCount();
 }
 
 
@@ -217,12 +214,23 @@ void PositionMatrix::RotateDown(void)
 	}
 
 	PositionMatrix::GenerateID();
-	PositionMatrix::UpdateBitCount();
 }
 
 
-void PositionMatrix::ShiftUp(void)
+bool PositionMatrix::ShiftUp(void)
 {
+	for (int row = 0; row < 4; row++)
+	{
+		for (int col = 0; col < 4; col++)
+		{
+			if (this->matrix[3][row][col] != 0)
+			{
+				return false;
+			}
+		}
+	}
+	
+
 	for (int floor = 3; floor > 0; floor--)
 	{
 		for (int row = 0; row < 4; row++)
@@ -241,12 +249,22 @@ void PositionMatrix::ShiftUp(void)
 		}
 	}
 	PositionMatrix::GenerateID();
-	PositionMatrix::UpdateBitCount();
+	return true;
 }
 
 
-void PositionMatrix::ShiftDown(void)
+bool PositionMatrix::ShiftDown(void)
 {
+	for (int row = 0; row < 4; row++)
+	{
+		for (int col = 0; col < 4; col++)
+		{
+			if (this->matrix[0][row][col] != 0)
+			{
+				return false;
+			}
+		}
+	}
 	for (int floor = 0; floor < 3; floor++)
 	{
 		for (int row = 0; row < 4; row++)
@@ -265,12 +283,22 @@ void PositionMatrix::ShiftDown(void)
 		}
 	}
 	PositionMatrix::GenerateID();
-	PositionMatrix::UpdateBitCount();
+	return true;
 }
 
 
-void PositionMatrix::ShiftLeft(void)
+bool PositionMatrix::ShiftLeft(void)
 {
+	for (int floor = 0; floor < 4; floor++)
+	{
+		for (int row = 0; row < 4; row++)
+		{
+			if (this->matrix[floor][row][0] != 0)
+			{
+				return false;
+			}
+		}
+	}
 	for (int col = 0; col < 3; col++)
 	{
 		for (int floor = 0; floor < 4; floor++)
@@ -290,12 +318,22 @@ void PositionMatrix::ShiftLeft(void)
 		}
 	}
 	PositionMatrix::GenerateID();
-	PositionMatrix::UpdateBitCount();
+	return true;
 }
 
 
-void PositionMatrix::ShiftRight(void)
+bool PositionMatrix::ShiftRight(void)
 {
+	for (int floor = 0; floor < 4; floor++)
+	{
+		for (int row = 0; row < 4; row++)
+		{
+			if (this->matrix[floor][row][3] != 0)
+			{
+				return false;
+			}
+		}
+	}
 	for (int col = 3; col > 0; col--)
 	{
 		for (int floor = 0; floor < 4; floor++)
@@ -315,12 +353,22 @@ void PositionMatrix::ShiftRight(void)
 		}
 	}
 	PositionMatrix::GenerateID();
-	PositionMatrix::UpdateBitCount();
+	return true;
 }
 
 
-void PositionMatrix::ShiftForward(void)
+bool PositionMatrix::ShiftForward(void)
 {
+	for (int floor = 0; floor < 4; floor++)
+	{
+		for (int col = 0; col < 4; col++)
+		{
+			if (this->matrix[floor][3][col] != 0)
+			{
+				return false;
+			}
+		}
+	}
 	for (int row = 3; row > 0; row--)
 	{
 		for (int floor = 0; floor < 4; floor++)
@@ -340,12 +388,22 @@ void PositionMatrix::ShiftForward(void)
 		}
 	}
 	PositionMatrix::GenerateID();
-	PositionMatrix::UpdateBitCount();
+	return true;
 }
 
 
-void PositionMatrix::ShiftBackward(void)
+bool PositionMatrix::ShiftBackward(void)
 {
+	for (int floor = 0; floor < 4; floor++)
+	{
+		for (int col = 0; col < 4; col++)
+		{
+			if (this->matrix[floor][3][col] != 0)
+			{
+				return false;
+			}
+		}
+	}
 	for (int row = 0; row < 3; row++)
 	{
 		for (int floor = 0; floor < 4; floor++)
@@ -365,5 +423,52 @@ void PositionMatrix::ShiftBackward(void)
 		}
 	}
 	PositionMatrix::GenerateID();
-	PositionMatrix::UpdateBitCount();
+	return true;
+}
+
+// Function to move piece to back, left, bottom corner
+void PositionMatrix::ShiftToCorner(void)
+{
+	int bit_check = this->bit_count;
+	for (int a = 0; a < 3; a++)
+	{
+		PositionMatrix saved_copy = *this;
+		saved_copy.ShiftLeft();
+		if (saved_copy.GetBitCount() == bit_check)
+		{
+			this->ShiftLeft();
+		}
+		else
+		{
+			break;
+		}
+	}
+	for (int a = 0; a < 3; a++)
+	{
+		PositionMatrix saved_copy = *this;
+		saved_copy.ShiftDown();
+		if (saved_copy.GetBitCount() == bit_check)
+		{
+			this->ShiftDown();
+		}
+		else
+		{
+			break;
+		}
+	}
+	for (int a = 0; a < 3; a++)
+	{
+		PositionMatrix saved_copy = *this;
+		saved_copy.ShiftBackward();
+		if (saved_copy.GetBitCount() == bit_check)
+		{
+			this->ShiftBackward();
+		}
+		else
+		{
+			break;
+		}
+	}
+
+
 }

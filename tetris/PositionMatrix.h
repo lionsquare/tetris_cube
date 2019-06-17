@@ -10,14 +10,17 @@ public:
 	void RotateRight();
 	void RotateUp();
 	void RotateDown();
-	void ShiftUp();
-	void ShiftDown();
-	void ShiftLeft();
-	void ShiftRight();
-	void ShiftForward();
-	void ShiftBackward();
+	// Shift functions are guaranteed not to move pieces off the board
+	bool ShiftUp();
+	bool ShiftDown();
+	bool ShiftLeft();
+	bool ShiftRight();
+	bool ShiftForward();
+	bool ShiftBackward();
+	void ShiftToCorner();
 	int GetBitCount();
-	unsigned long long GetID();
+	unsigned long long GetID() const;
+	inline bool operator< (const PositionMatrix& rhs) { return (this -> GetID() < rhs.GetID()); }
 private:
 	void GenerateID();
 	void UpdateBitCount();

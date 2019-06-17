@@ -7,49 +7,7 @@ using namespace std;
 int main()
 {
 	cout << "Welcome to Sevy's Tetris Cube Solver" << endl;
-
-
 	Piece Lucy0 = Piece("Lucy", Lucy);
-	/*PositionMatrix P = PositionMatrix();
-	
-
-	
-	P.SetMatrix(Lucy);
-	P.Display();
-	P.RotateLeft();
-	P.Display();
-	P.RotateRight();
-	P.Display();
-	P.RotateUp();
-	P.Display();
-	P.RotateDown();
-	P.Display();
-
-	P.SetMatrix(Lucy);
-	P.Display();
-
-	P.ShiftBackward();
-	P.Display();
-
-	P.SetMatrix(Lucy);
-	P.ShiftForward();
-	P.Display();
-
-	P.SetMatrix(Lucy);
-	P.ShiftDown();
-	P.Display();
-
-	P.SetMatrix(Lucy);
-	P.ShiftUp();
-	P.Display();
-
-	P.SetMatrix(Lucy);
-	P.ShiftLeft();
-	P.Display();
-
-	P.SetMatrix(Lucy);
-	P.ShiftRight();
-	P.Display(); */
 	return 0;
 }
 

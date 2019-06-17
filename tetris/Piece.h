@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <set>
 #include "PositionMatrix.h"
 
 #define DIRECTION_UP 0
@@ -21,8 +22,10 @@ public:
 private:
 	std::string name;
 	std::vector<PositionMatrix> possible_positions;
+	std::set<PositionMatrix> rotations;
 	PositionMatrix original_position;
 	void GeneratePossiblePositions();
 	void Shift3(const PositionMatrix &base_position, const int bit_check, int direction);
+	void Shift64(const PositionMatrix &base_position);
 };
 
