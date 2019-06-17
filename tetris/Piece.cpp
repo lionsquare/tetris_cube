@@ -1,6 +1,7 @@
 #include "Piece.h"
 #include <iostream>
 #include <set>
+#include <algorithm>
 
 Piece::Piece(std::string new_name, PositionMatrix given_position)
 {
@@ -46,71 +47,35 @@ std::vector<unsigned long long> GetBitVectors()
 void Piece::GeneratePossiblePositions()
 {
 	Piece::possible_positions.clear();
-	int bit_check = Piece::original_position.GetBitCount();
-	
-
 	Piece::rotations.clear();
-	std::set<unsigned long long> unique_positions;
+
+	this->GenerateRotations();
 	
 
-	// Generate the 24 orientations
-	for (int cw_rot = 0; cw_rot < 4; cw_rot++)
+	std::set<PositionMatrix>::iterator it = this->rotations.begin();
+
+	while (it != this->rotations.end())
 	{
-		for (int up_rot = 0; up_rot < 4; up_rot++)
-		{
-			PositionMatrix modified = Piece::original_position;
-			for (int cw = 0; cw < cw_rot; cw++)
-			{
-				modified.RotateLeft();
-			}
-			for (int up = 0; up < up_rot; up++)
-			{
-				modified.RotateUp();
-			}
-			Piece::rotations.insert(modified);
-			unique_positions.insert(modified.GetID());
-		}
+		PositionMatrix modified = *it;
+		Piece::Shift64(modified);
+		it++;
 	}
-	for (int cw_rot = 0; cw_rot < 4; cw_rot++)
-	{
-		for (int up_rot = 0; up_rot < 4; up_rot++)
-		{
-			PositionMatrix modified = Piece::original_position;
-			for (int up = 0; up < up_rot; up++)
-			{
-				modified.RotateUp();
-			}
-			for (int cw = 0; cw < cw_rot; cw++)
-			{
-				modified.RotateLeft();
-			}
-			unique_positions.insert(modified.GetID());
-		}
-	}
-	for (int cw_rot = 0; cw_rot < 4; cw_rot++)
-	{
-		for (int up_rot = 0; up_rot < 4; up_rot++)
-		{
-			PositionMatrix modified = Piece::original_position;
-			modified.RotateRight();
-			for (int up = 0; up < up_rot; up++)
-			{
-				modified.RotateUp();
-			}
-			for (int cw = 0; cw < cw_rot; cw++)
-			{
-				modified.RotateRight();
-			}
-			unique_positions.insert(modified.GetID());
-		}
-	}
-	std::cout << "Unique IDs:\t" << unique_positions.size() << std::endl;
-	//Piece::Shift64(modified);
+	
+	std::sort(Piece::possible_positions.begin(), Piece::possible_positions.end());
+	Piece::possible_positions.erase(std::unique(Piece::possible_positions.begin(), Piece::possible_positions.end()), Piece::possible_positions.end());
+
 
 	for (unsigned int a = 0; a < Piece::possible_positions.size(); a++)
 	{
 		std::cout<<std::hex<<Piece::possible_positions[a].GetID()<<std::endl;
+		int bc = Piece::possible_positions[a].GetBitCount();
+		if (bc != this->original_position.GetBitCount())
+		{
+			std::cout << "Big problem!!!\n";
+		}
+		
 	}
+	std::cout << Piece::possible_positions.size() << std::endl;
 
 }
 
@@ -141,9 +106,7 @@ void Piece::Shift64(const PositionMatrix &base_position)
 				}
 				if (stays_in_bounds)
 				{
-					std::cout << count << std::endl;
 					Piece::possible_positions.push_back(modified);
-					modified.Display();
 					count++;
 				}
 
@@ -152,52 +115,56 @@ void Piece::Shift64(const PositionMatrix &base_position)
 	}
 }
 
-
-void Piece::Shift3(const PositionMatrix &base_position, const int bit_check, int direction)
+void Piece::GenerateRotations(void)
 {
-	PositionMatrix copied_position = base_position;
-	if (copied_position.GetBitCount() == bit_check)
+	this->rotations.clear();
+	for (int cw_rot = 0; cw_rot < 4; cw_rot++)
 	{
-		Piece::possible_positions.push_back(copied_position);
-	}
-	else
-	{
-		return;
-	}
-	for (int a = 0; a < 3; a++)
-	{
-		bool stays_in_bounds = false;
-		switch (direction)
+		for (int up_rot = 0; up_rot < 4; up_rot++)
 		{
-		case DIRECTION_UP:
-			stays_in_bounds = copied_position.ShiftUp();
-			break;
-		case DIRECTION_DOWN:
-			stays_in_bounds = copied_position.ShiftDown();
-			break;
-		case DIRECTION_LEFT:
-			stays_in_bounds = copied_position.ShiftLeft();
-			break;
-		case DIRECTION_RIGHT:
-			stays_in_bounds = copied_position.ShiftRight();
-			break;
-		case DIRECTION_FORWARD:
-			stays_in_bounds = copied_position.ShiftForward();
-			break;
-		case DIRECTION_BACKWARD:
-			stays_in_bounds = copied_position.ShiftBackward();
-			break;
-		default:
-			break;
-
+			PositionMatrix modified = Piece::original_position;
+			for (int cw = 0; cw < cw_rot; cw++)
+			{
+				modified.RotateLeft();
+			}
+			for (int up = 0; up < up_rot; up++)
+			{
+				modified.RotateUp();
+			}
+			this->rotations.insert(modified);
 		}
-		if (stays_in_bounds)
+	}
+	for (int cw_rot = 0; cw_rot < 4; cw_rot++)
+	{
+		for (int up_rot = 0; up_rot < 4; up_rot++)
 		{
-			Piece::possible_positions.push_back(copied_position);
+			PositionMatrix modified = Piece::original_position;
+			for (int up = 0; up < up_rot; up++)
+			{
+				modified.RotateUp();
+			}
+			for (int cw = 0; cw < cw_rot; cw++)
+			{
+				modified.RotateLeft();
+			}
+			this->rotations.insert(modified);
 		}
-		else
+	}
+	for (int cw_rot = 0; cw_rot < 4; cw_rot++)
+	{
+		for (int up_rot = 0; up_rot < 4; up_rot++)
 		{
-			return;
+			PositionMatrix modified = Piece::original_position;
+			modified.RotateRight();
+			for (int up = 0; up < up_rot; up++)
+			{
+				modified.RotateUp();
+			}
+			for (int cw = 0; cw < cw_rot; cw++)
+			{
+				modified.RotateRight();
+			}
+			this->rotations.insert(modified);
 		}
 	}
 }

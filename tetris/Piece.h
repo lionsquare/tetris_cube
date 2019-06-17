@@ -25,7 +25,7 @@ private:
 	std::set<PositionMatrix> rotations;
 	PositionMatrix original_position;
 	void GeneratePossiblePositions();
-	void Shift3(const PositionMatrix &base_position, const int bit_check, int direction);
 	void Shift64(const PositionMatrix &base_position);
+	void GenerateRotations();
 };
 

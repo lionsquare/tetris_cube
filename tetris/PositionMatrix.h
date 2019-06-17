@@ -4,7 +4,7 @@ class PositionMatrix
 public:
 	PositionMatrix();
 	~PositionMatrix();
-	void Display();
+	void Display() const;
 	void SetMatrix(int new_matrix[4][4][4]);
 	void RotateLeft();
 	void RotateRight();
@@ -20,7 +20,9 @@ public:
 	void ShiftToCorner();
 	int GetBitCount();
 	unsigned long long GetID() const;
-	inline bool operator< (const PositionMatrix& rhs) { return (this -> GetID() < rhs.GetID()); }
+	inline bool operator< (const PositionMatrix& rhs) const { return (this->GetID() < rhs.GetID()); }
+	inline bool operator> (const PositionMatrix& rhs) const { return (this->GetID() > rhs.GetID()); }
+	inline bool operator== (const PositionMatrix& rhs) const { return (this->GetID() == rhs.GetID()); }
 private:
 	void GenerateID();
 	void UpdateBitCount();
