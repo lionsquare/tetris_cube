@@ -1,13 +1,16 @@
 #include <iostream>
-#include "TetrisPieces.h"
-#include "PositionMatrix.h"
-#include "Piece.h"
+#include "Cube.h"
 using namespace std;
+
+
 
 int main()
 {
 	cout << "Welcome to Sevy's Tetris Cube Solver" << endl;
-	Piece Lucy0 = Piece("Lucy", Lucy);
+	Cube tetris_cube = Cube();
+	tetris_cube.Solve();
+
+
 	return 0;
 }
 

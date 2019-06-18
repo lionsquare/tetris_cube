@@ -30,16 +30,25 @@ Piece::~Piece()
 }
 
 
-std::vector<PositionMatrix> GetPossiblePositions()
+std::vector<PositionMatrix> Piece::GetPossiblePositions()
 {
 	std::vector<PositionMatrix> arrangements;
 	return arrangements;
 }
 
 
-std::vector<unsigned long long> GetBitVectors()
+std::vector<unsigned long long> Piece::GetBitVectors()
 {
 	std::vector<unsigned long long> bit_vectors;
+	for (unsigned int a = 0; a < this->possible_positions.size(); a++)
+	{
+		if (this->possible_positions[a].GetID() == 0)
+		{
+			std::cout << "Zero ID!!!" << std::endl;
+			continue;
+		}
+		bit_vectors.push_back(this->possible_positions[a].GetID());
+	}
 	return bit_vectors;
 }
 
@@ -67,16 +76,13 @@ void Piece::GeneratePossiblePositions()
 
 	for (unsigned int a = 0; a < Piece::possible_positions.size(); a++)
 	{
-		std::cout<<std::hex<<Piece::possible_positions[a].GetID()<<std::endl;
 		int bc = Piece::possible_positions[a].GetBitCount();
 		if (bc != this->original_position.GetBitCount())
 		{
-			std::cout << "Big problem!!!\n";
+			std::cout << "Big problem!!! Destructive operation\n";
 		}
 		
 	}
-	std::cout << Piece::possible_positions.size() << std::endl;
-
 }
 
 
