@@ -1,5 +1,7 @@
 #include <iostream>
 #include "Cube.h"
+#include "PositionMatrix.h"
+#include "Piece.h"
 using namespace std;
 
 
@@ -7,6 +9,7 @@ using namespace std;
 int main()
 {
 	cout << "Welcome to Sevy's Tetris Cube Solver" << endl;
+
 	Cube tetris_cube = Cube();
 	tetris_cube.Solve();
 

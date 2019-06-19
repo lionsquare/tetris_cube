@@ -174,3 +174,10 @@ void Piece::GenerateRotations(void)
 		}
 	}
 }
+
+
+// ------------------------------ Unit Tests ------------------------------- //
+bool Piece::RunUnitTests()
+{
+	return false;
+}

@@ -13,6 +13,7 @@ public:
 	~Piece();
 	std::vector<PositionMatrix> GetPossiblePositions();
 	std::vector<unsigned long long> GetBitVectors();
+	bool RunUnitTests();
 private:
 	std::string name;
 	std::vector<PositionMatrix> possible_positions;
